@@ -1,3 +1,2 @@
-# This is just a test to maybe show Dr. Lusth on Friday. no need to resubmit for this
 
 ((class(){ V method = F(){println("Testing")}})().method)()
