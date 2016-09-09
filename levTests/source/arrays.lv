@@ -1,0 +1,43 @@
+#####################
+# Array Test
+# DPL Project
+#####################
+
+# make an array
+var arr = [1, 2, 3]
+
+# print the array
+println(arr)
+
+# index into the array (constant time -- based on c++ std::vector)
+println(arr[2])
+
+# assigning into an array
+arr[2] = "Hello"
+
+println(arr)
+
+
+# sub-arrays
+# arrays support all types -- including strings, arrays, ints, reals, booleans, and functions (including builtins)
+arr = [["Hello", "World"], ["This is a test", 1, 2, 3], 123., T, println, none]
+println(arr)
+
+PL()
+
+# index into a subarray 
+
+PL((arr[0])[1])
+
+# call a function in an array
+(arr[4])("Hello world!")
+
+PL()
+
+# for loops iterate over arrays
+L x in arr P(x, ", ") PL()
+
+# range generates an array -- similar to python's range functions
+PL(range(0,10,2))
+PL(range(0,4))
+PL(range(5, 0, -1))

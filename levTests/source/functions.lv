@@ -1,0 +1,47 @@
+#####################
+# Function Test
+# DPL Project
+#####################
+
+
+
+
+# Functions are created like normal objects
+# There is no such thing as a function definition
+# Instead, you create a function, and then assign it to a variable
+
+var greet = function (name) println("Hello, ", name)
+
+# now, we can call it
+# to call a function in Leviathan, we must evaluate a function closure
+# and then call that closure
+# this means there are multiple ways to call a function in the current scope
+
+greet("Andrew")
+(greet)("Andrew")
+(this.greet)("Andrew")
+
+# We can also call lambdas
+
+(F() println("Hello World!"))()
+
+# Functions are first class objects in Leviathan, so we can pass them and return them as objects
+
+var test = function(func) {func()};
+
+
+((test)(F() F() PL("I'm a lambda inside a lambda!")))()
+
+# we can also store them in arrays
+
+var arr = [greet, function() "I'm a lambda function"]
+
+println(arr)
+
+# and to further show the full functionality, we can even do things like curry
+
+V add = F(a) F(b) F(c) a + b + c
+
+println(((add(1))(2))(3), " should be 6");
+
+

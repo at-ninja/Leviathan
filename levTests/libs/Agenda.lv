@@ -1,0 +1,60 @@
+U "PriorityQueue.lv"
+V propagate = F() I empty_agenda(the_agenda) "done" E
+{
+    (first_agenda_item(the_agenda))()
+    remove_first_agenda_item(the_agenda)
+    propagate()
+}
+V make_time_segment = F(time, queue) cons(time, queue)
+V segment_time = F(s) car(s)
+V segment_queue = F(s) cdr(s)
+V make_agenda = F() cons(0, N)
+V current_time = F(agenda) car(agenda)
+V set_current_time = F(agenda, time) set_car(agenda, time)
+V segments = F(agenda) cdr(agenda)
+V set_segments = F(agenda, segments) set_cdr(agenda, segments)
+V first_segment = F(agenda) car(segments(agenda))
+V rest_segments = F(agenda) cdr(segments(agenda))
+V empty_agenda = F(agenda) segments(agenda) == N
+V add_to_agenda = F(time, action, agenda)
+{
+    V belongs_before = F(segments) I segments == N T E I time < segment_time(car(segments)) T E !(T)
+    V make_new_time_segment = F(time, action)
+    {
+        V q = make_queue()
+        insert_queue(q, action)
+        make_time_segment(time, q)
+    }
+    V add_to_segments = F(segments)
+        I segment_time(car(segments)) == time
+            insert_queue(segment_queue(car(segments)), action)
+        E
+        {
+            V rest = cdr(segments)
+            I belongs_before(rest)
+                set_cdr(segments, cons(make_new_time_segment(time, action), cdr(segments)))
+            E
+                add_to_segments(rest)
+        }
+    V segments = segments(agenda)
+    I belongs_before(segments)
+        set_segments(agenda, cons(make_new_time_segment(time, action), segments))
+    E
+        add_to_segments(segments)
+}
+V remove_first_agenda_item = F(agenda)
+{
+    V q = segment_queue(first_segment(agenda))
+    delete_queue(q)
+    I empty_queue(q)
+        set_segments(agenda, rest_segments(agenda))
+}
+V first_agenda_item = F(agenda)
+    I empty_agenda(agenda)
+        "Agenda is empty -- FIRST-AGENDA-ITEM"
+    E
+    {
+        V first_seg = first_segment(agenda)
+        set_current_time(agenda, segment_time(first_seg))
+        front_queue(segment_queue(first_seg))
+    }

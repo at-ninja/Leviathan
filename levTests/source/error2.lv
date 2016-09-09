@@ -1,0 +1,15 @@
+#####################
+# Parser Error Test 2
+# DPL Project
+#####################
+
+# This is a tricky syntax error.  The parser is trying to parse an array reference
+# due to the nature of how Leviathan ignores whitespace
+# It finds a comma instead of a ] lexeme, and throws a syntax error
+
+if (true)
+    [1,2,3] 
+    # So here, instead of trying to parse an array, it is trying to parse an array reference due to lack of syntatic sugar
+    # This can be fixed by surrounding the blocks of code with curly braces
+else
+    [3,2,1]

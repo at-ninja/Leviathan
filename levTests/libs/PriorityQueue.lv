@@ -1,0 +1,25 @@
+U "Cons.lv"
+V front_ptr = F(queue) car(queue)
+V rear_ptr = F(queue) cdr(queue)
+V set_front_ptr = F(queue, item) set_car(queue, item)
+V set_rear_ptr = F(queue, item) set_cdr(queue, item)
+V empty_queue = F(queue) N==front_ptr(queue)
+V make_queue = F() cons(N, N)
+V front_queue = F(queue) I empty_queue(queue) "FRONT called with an empty queue" E car(front_ptr(queue))
+V insert_queue = F(queue, item)
+{
+    V new_pair = cons(item, N)
+    I empty_queue(queue)
+    {
+        set_front_ptr(queue, new_pair)
+        set_rear_ptr(queue, new_pair)
+        queue
+    }
+    E
+    {
+        set_cdr(rear_ptr(queue), new_pair)
+        set_rear_ptr(queue, new_pair)
+        queue
+    }
+}
+V delete_queue = F(queue) I empty_queue(queue) "DELETE called with an empty queue" E set_front_ptr(queue, cdr(front_ptr(queue)))

@@ -1,0 +1,45 @@
+U "Agenda.lv"
+
+# make the defaults for the wires
+V the_agenda = make_agenda()
+V inverter_delay = 2
+V and_gate_delay = 3
+V or_gate_delay  = 5
+
+V make_wire = F()
+{
+    V signal_value = 0
+    V action_procedures = N
+    V set_my_signal = F(new_value) 
+        I !(signal_value == new_value)
+        {
+            signal_value = new_value
+            call_each(action_procedures)
+        }
+        E "done"
+    V accept_action_procedure = F(proc)
+    {
+        action_procedures = cons(proc, action_procedures)
+        proc()
+    }
+    V dispatch = F(m)
+    {
+        I m == "get_signal" signal_value
+        E I m == "set_signal" set_my_signal
+        E I m == "add_action" accept_action_procedure
+        E "Unknown operation -- WIRE" + string(m)
+    }
+    dispatch
+}
+V call_each = F(procedures)
+    I procedures == N
+        "done"
+    E
+    {
+        (car(procedures))()
+        call_each(cdr(procedures))
+    }
+V get_signal = F(wire) wire("get_signal")
+V set_signal = F(wire, new_value) (wire("set_signal"))(new_value)
+V add_action = F(wire, action_procedure) (wire("add_action"))(action_procedure)
+V after_delay = F(delay, action) add_to_agenda(delay + current_time(the_agenda), action, the_agenda)

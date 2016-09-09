@@ -1,0 +1,11 @@
+#####################
+# Parser Error Test 3
+# DPL Project
+#####################
+
+# This is a parse error where an invalid lexeme is parsed while parsing a statement
+
+if true
+    {}
+else
+    +

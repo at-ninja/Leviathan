@@ -1,0 +1,22 @@
+V Dictionary=C(){V _N=C(){V k=N;V v=N;V c="RED";V l=_E;V r=_E;V p=_E;V e=F(n)(k
+==n.k)A(c==n.c)}V _n=C(){V k=N;V v=N;V c="BLACK";V l=N;V r=N;V p=N;V e=F(n)(k==
+n.k)A(c==n.c)}V _E=_n()V _R=_E;V _l=F(x)I!((x.r.e)(_E)){V y=x.r;x.r=y.l;I!((y.l
+.e)(_E))y.l.p=x;y.p=x.p;I(x.p.e)(_E)_R=y E I(x.e)(x.p.l)x.p.l=y E x.p.r=y y.l=x
+x.p=y}V _r=F(x)I!((x.l.e)(_E)){V y=x.l;x.l=y.r;I!((y.r.e)(_E))y.r.p=x y.p=x.p;I
+(x.p.e)(_E)_R=y E I(x.e)(x.p.r)x.p.r=y E x.p.l=y y.r=x;x.p=y}V _t=F(z){V y=_E;V
+x=_R;W!((x.e)(_E)){y=x;I _h(z.k)<_h(x.k)x=x.l E x=x.r}z.p=y;I(y.e)(_E)_R=z E I
+_h(z.k)<_h(y.k)y.l=z E y.r=z}V _b=F(x){_t(x)x.c="RED"V y;W!((x.e)(_R))A(x.p.c==
+"RED"){I (x.p.e)(x.p.p.l){y=x.p.p.r;I y.c=="RED"{x.p.c="BLACK"y.c="BLACK"x.p.p.
+c="RED"x=x.p.p}E{I(x.e)(x.p.r){x=x.p;_l(x)}x.p.c="BLACK"x.p.p.c="RED"_r(x.p.p)}
+}E{y=x.p.p.l;I y.c=="RED"{x.p.c="BLACK"y.c="BLACK"x.p.p.c="RED"x=x.p.p}E{I(x.e)
+(x.p.l){x=x.p;_r(x)}x.p.c="BLACK"x.p.p.c="RED"_l(x.p.p)}}}_R.c="BLACK"}V insert
+=F(k,v){_s(k,v)I(_f(_h(k),_R)==N){V y=_N()y.k=k;y.v=v;_b(y)}}V _p=F()_e(_R,0)V
+_e=F(n,l){V s=F(l){I l==0""E"    "+s(l-1)}I!(n==N)I(n.e)(_E){}E{_e(n.l,l+1);PL(
+s(l),n.k,":",n.v," ",n.c)_e(n.r,l+1)}}V _h=F(k){I k==string(k)k=string(k)+"STR"
+E k=string(k)+"NUM"V a=378551;V b=63689;V h=0;L i in R(0,len(k)){h=h*a+int(
+charAt(k,i))a=a*b}h}V search=F(k)_x(_h(k),_R)V _x=F(h,n){I(n.e)(_E)N E I _h(n.k
+)==h n.v E I h<_h(n.k)_x(h,n.l)E _x(h,n.r)}V _f=F(h,n){I(n.e)(_E)N E I _h(n.k)
+==h n E I h<_h(n.k)_f(h,n.l)E _f(h,n.r)}V _s=F(k,v)_a(_R,k,v)V _a=F(n,k,v)I(n.e
+)(_E)N E I _h(n.k)==_h(k) n.v=v E I _h(k)<_h(n.k)_a(n.l,k,v)E _a(n.r,k,v)V
+items=F(){V a=_y(_R)a}V _y=F(n){I(n.e)(_E){[]}E I n.v==N _y(n.l)+_y(n.r)E[[n.k,
+n.v]]+_y(n.l)+_y(n.r)}}
