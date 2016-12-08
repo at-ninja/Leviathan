@@ -11,6 +11,8 @@
 #include "environment.hh"
 #include "evaluation.hh"
 
+void startInteractivePrompt();
+
 int main(int argc, char *argv[])
 {
     try
@@ -18,8 +20,13 @@ int main(int argc, char *argv[])
         
         if (argc < 2)
         {
-            String error = "Usage: "; error.append(argv[0]); error += " <f>";
-            throw std::runtime_error(error);
+            // Call the interactive prompt
+
+            startInteractivePrompt();
+            return 0;
+
+            // String error = "Usage: "; error.append(argv[0]); error += " <f>";
+            // throw std::runtime_error(error);
         }
         
         int found = std::string(argv[1]).find_last_of("/\\");
@@ -41,4 +48,36 @@ int main(int argc, char *argv[])
         printf("%s\n", error.what());
     }
     
+}
+
+void startInteractivePrompt() 
+{
+    std::string dir = "./";
+    printf("%s\n%s\n","Kraken (Leviathan) v1.1", "Press Ctrl+C to exit");
+
+    std::string line;
+    std::string runningline;
+    std::string emptyString = "";
+
+    // Create an Evaluation environment
+    Leviathan::Evaluator eval = Leviathan::Evaluator(dir);
+
+    printf("%s", "lev> ");
+    while (std::getline(std::cin, line)) 
+    {
+        if (line == emptyString)
+        {
+            // Try to run whatever we have
+            
+            eval.startEvalString(runningline);
+            runningline = "";
+        }
+        else
+        {
+            // Add the line to the running total
+            runningline += line; 
+            runningline += "\n";
+        }
+        printf("%s", "lev> ");
+    }
 }

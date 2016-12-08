@@ -632,6 +632,15 @@ namespace Leviathan
                 i.close();
                 return a;
             }
+            Lexeme* parseString(String stringToParse)
+            {
+                i = Lexer(stringToParse, true);
+                Pending = i.lex();
+                Lexeme* a = program();
+                match(END_OF_INPUT);
+                //i.close();
+                return a;
+            }
             
     };
 }

@@ -21,12 +21,32 @@ namespace Leviathan
             int lineNumber;
             char ch;
             std::ifstream* file;
+
+            bool isFile = false;
+            int promptCharIndex = 0;
+            String input;
+
+            int init()
+            {
+                try
+                {
+                    lineNumber = 1;
+                    initKeywords();
+                }
+                catch (int e)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+
             int init(String fileName)
             {
                 try 
                 {
                     file = new std::ifstream(fileName.c_str());
                     lineNumber = 1;
+                    isFile = true;
             
                     initKeywords();
             
@@ -40,18 +60,34 @@ namespace Leviathan
         
             char getCharacter()
             {
-                file->get(ch);
+                if (isFile)
+                    file->get(ch);
+                else 
+                {
+                    if (promptCharIndex < input.length())
+                    {
+                        ch = input.at(promptCharIndex);
+                        promptCharIndex += 1;
+                    }
+                    else
+                        ch = '\0';
+                } 
                 return ch;
             };
     
             char peek()
             {
-                return file->peek();
+                if (isFile)
+                    return file->peek();
+                return input.at(promptCharIndex);
             };
     
             void putback()
             {
-                file->putback(ch);
+                if (isFile)
+                    file->putback(ch);
+                else
+                    promptCharIndex -= 1;
             };
     
             int skipWhiteSpace()
@@ -96,7 +132,7 @@ namespace Leviathan
     
             bool endOfInput()
             {
-                return ch == EOF || file->eof();
+                return ch == EOF || (!isFile && promptCharIndex >= input.length()) || (isFile && file->eof());
             };
     
             Lexeme lexString()
@@ -187,10 +223,27 @@ namespace Leviathan
                     throw std::runtime_error(error);
                 }
             };
+            Lexer (String stringToEval, bool isPrompt)
+            {
+                if (isPrompt)
+                {
+                    isFile = false;
+                    input = stringToEval;
+                    int a = init();
+                    if (a == 1)
+                    {
+                        String error = "There was an error initializing the lexer";
+                        throw std::runtime_error(error);
+                    }
+                }
+            };
             void close()
             {
-                file->close();
-                delete file;
+                if (isFile)
+                {
+                    file->close();
+                    delete file;
+                }
             };
             int getLineNumber()
             {

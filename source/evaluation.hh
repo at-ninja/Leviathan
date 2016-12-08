@@ -907,6 +907,14 @@ namespace Leviathan
                 
                 return this->eval(p.parse(fileName), this->globalEnv);
             }
+
+            Lexeme* startEvalString(String stringToParse)
+            {
+                Parser p = Parser();
+
+                return this->eval(p.parseString(stringToParse), this->globalEnv);
+            }
+
             Lexeme* global()
             {
                 return this->globalEnv;
