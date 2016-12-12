@@ -69,7 +69,21 @@ void startInteractivePrompt()
         {
             // Try to run whatever we have
             
-            eval.startEvalString(runningline);
+            try
+            {
+                Leviathan::Lexeme* result = eval.startEvalString(runningline);
+
+                // Print the result
+                if (result != NULL)
+                    printf("%s\n", result->toValue().c_str());
+                else printf("\n");
+            }
+            catch (std::runtime_error e)
+            {
+                printf("%s\n", e.what());
+            }
+
+            // Reset the runningline
             runningline = "";
         }
         else

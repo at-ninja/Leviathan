@@ -19,4 +19,4 @@ charAt(k,i))a=a*b}h}V search=F(k)_x(_h(k),_R)V _x=F(h,n){I(n.e)(_E)N E I _h(n.k
 ==h n E I h<_h(n.k)_f(h,n.l)E _f(h,n.r)}V _s=F(k,v)_a(_R,k,v)V _a=F(n,k,v)I(n.e
 )(_E)N E I _h(n.k)==_h(k) n.v=v E I _h(k)<_h(n.k)_a(n.l,k,v)E _a(n.r,k,v)V
 items=F(){V a=_y(_R)a}V _y=F(n){I(n.e)(_E){[]}E I n.v==N _y(n.l)+_y(n.r)E[[n.k,
-n.v]]+_y(n.l)+_y(n.r)}}
+n.v]]+_y(n.l)+_y(n.r)}V get=search V add=insert}
