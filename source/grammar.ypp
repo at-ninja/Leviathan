@@ -1,0 +1,310 @@
+%code requires {
+    #include <string>
+}
+
+%{
+    #include <math.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <iostream>
+    #include <memory>
+    #include <string>
+    int yylex (void);
+    extern char* yytext;
+    void yyerror (char const *);
+    std::string result;
+%}
+
+%define api.value.type {std::string}
+
+%token AND "and"
+%token AS "as"
+%token ASSIGN "="
+%token AUG_ADD "+="
+%token AUG_DIV "/="
+%token AUG_INT_DIV "//="
+%token AUG_MOD "%="
+%token AUG_MUL "*="
+%token AUG_SUB "-="
+%token BIN_COMP "~"
+%token BREAK "break"
+%token CLASS "class"
+%token CLOSE_BRACE "}"
+%token CLOSE_BRACK "]"
+%token CLOSE_PAREN ")"
+%token COLON ":"
+%token COMMA ","
+%token CONTINUE "continue"
+%token DIV "/"
+%token DOT "."
+%token ELIF "elif"
+%token ELSE "else"
+%token EQUALITY "=="
+%token EXCEPT "except"
+%token EXPONENT "**"
+%token FALSE "false"
+%token FOR "for"
+%token FROM "from"
+%token FUNCTION "function"
+%token GRT_EQL ">="
+%token GRT_THAN ">"
+%token IF "if"
+%token IMPORT "import"
+%token IN "in"
+%token INEQUALITY "<>"
+%token INT_DIV "//"
+%token IS "is"
+%token LAMBDA "lambda"
+%token LES_EQL ">="
+%token LESS_THAN "<"
+%token MOD "%"
+%token MUL "*"
+%token NAME 
+%token NONE "none"
+%token NOT "not"
+%token NUMBER
+%token OPEN_BRACE "{"
+%token OPEN_BRACK "["
+%token OPEN_PAREN "("
+%token OR "or"
+%token PLUS "+"
+%token RETURN "return"
+%token SEMICOLON ";"
+%token STRING
+%token SUB "-"
+%token THROW "throw"
+%token TRUE "true"
+%token TRY "try"
+%token WHILE "while"
+
+%token END 0 "end of file"
+
+%start program
+
+%%
+
+program: 
+    stmtlist END
+
+stmtlist:
+    stmt stmtlist
+    | %empty
+
+stmt: 
+    simple_stmt 
+    | compound_stmt 
+    | block
+
+block: 
+    OPEN_BRACE stmtlist CLOSE_BRACE
+    | OPEN_BRACE stmtlist CLOSE_BRACE SEMICOLON
+
+simple_stmt: 
+    small_stmt
+    | small_stmt SEMICOLON
+
+small_stmt: 
+    expr_stmt 
+    | flow_stmt 
+    | import_stmt
+
+expr_stmt: 
+    test augassign test 
+    | test assignvars
+
+assignvars:
+    ASSIGN test assignvars
+    | %empty
+
+augassign: 
+    AUG_ADD
+    | AUG_SUB
+    | AUG_MUL
+    | AUG_DIV
+    | AUG_MOD
+    | AUG_INT_DIV
+
+flow_stmt: 
+    break_stmt 
+    | continue_stmt 
+    | return_stmt 
+    | throw_stmt
+
+break_stmt: 
+    BREAK
+
+continue_stmt: 
+    CONTINUE
+
+return_stmt: 
+    RETURN
+    | RETURN testlist
+
+throw_stmt: 
+    THROW
+    | THROW test 
+    | THROW test FROM test
+
+import_stmt: 
+    IMPORT test
+
+compound_stmt: 
+    if_stmt 
+    | while_stmt 
+    | for_stmt 
+    | try_stmt 
+    | funcdef 
+    | classdef
+
+if_stmt: 
+    IF test stmt_blk elif_stmt else_stmt
+
+stmt_blk:
+    COLON stmt
+    | block
+
+elif_stmt:
+    ELIF test stmt_blk elif_stmt
+    | %empty
+
+else_stmt:
+    ELSE stmt_blk
+    | %empty
+
+while_stmt: 
+    WHILE test stmt_blk else_stmt
+
+for_stmt: 
+    FOR atom_expr IN test stmt_blk
+
+try_stmt: 
+    TRY stmt_blk except_stmt
+
+except_stmt:
+    except_clause stmt_blk except_stmt
+    | except_clause stmt_blk
+
+except_clause: 
+    EXCEPT
+    | EXCEPT test
+    | EXCEPT test AS NAME
+    | %empty
+
+atom: 
+    NAME 
+    | NUMBER 
+    | STRING
+    | NONE 
+    | TRUE 
+    | FALSE
+    | OPEN_BRACK arglist CLOSE_BRACK
+
+atom_expr: 
+    atom trailers
+
+trailers: 
+    OPEN_PAREN arglist CLOSE_PAREN trailers
+    | OPEN_BRACK CLOSE_BRACK trailers
+    | OPEN_BRACK test CLOSE_BRACK trailers
+    | DOT NAME trailers
+    | %empty
+
+arglist:
+    test 
+    | test COMMA arglist
+    | %empty
+
+test: 
+    or_test 
+    | lambda_def
+
+or_test: 
+    and_test or_test_second_half
+
+or_test_second_half:
+    OR and_test or_test_second_half
+    | %empty
+
+and_test: 
+    not_test and_test_second_half
+    
+and_test_second_half:
+    AND not_test and_test_second_half
+    | %empty
+
+not_test: 
+    NOT not_test 
+    | comparison
+
+comparison: 
+    expr comparison_second_half
+    
+comparison_second_half:
+    comp_op expr comparison_second_half
+    | %empty
+
+comp_op: 
+    LESS_THAN 
+    | GRT_THAN
+    | EQUALITY
+    | GRT_EQL
+    | LES_EQL
+    | INEQUALITY
+    | IN
+    | NOT IN 
+    | IS
+    | IS NOT
+
+expr: 
+    term expr_second_half
+    
+expr_second_half:
+    PLUS term expr_second_half
+    SUB term expr_second_half
+    | %empty
+
+term: 
+    factor term_second_half
+    
+term_second_half:
+    MUL factor term_second_half
+    | DIV factor term_second_half
+    | MOD factor term_second_half
+    | INT_DIV factor term_second_half
+    | %empty
+
+factor: 
+    PLUS factor
+    | SUB factor
+    | BIN_COMP factor
+    | power
+    
+power: 
+    atom_expr 
+    | atom_expr EXPONENT factor
+
+lambda_def: 
+    LAMBDA parameters stmt_blk
+
+funcdef: 
+    FUNCTION NAME parameters stmt_blk
+
+classdef: 
+    CLASS NAME parameters stmt_blk
+
+parameters: 
+    OPEN_PAREN paramlist CLOSE_PAREN
+    | %empty
+
+paramlist:
+    NAME
+    | NAME COMMA paramlist
+    | %empty
+
+%%
+
+void yyerror (char const *x)
+{
+    printf("Error %s\n", x);
+    exit(1);
+}

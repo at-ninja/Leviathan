@@ -1,5 +1,0 @@
-V cons = C(left, right){}
-V car = F(c) c.left
-V cdr = F(c) c.right
-V set_car = F(c, i) c.left = i
-V set_cdr = F(c, i) c.right = i

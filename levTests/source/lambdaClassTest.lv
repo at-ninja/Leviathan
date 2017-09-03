@@ -1,2 +1,0 @@
-
-((class(){ V method = F(){println("Testing")}})().method)()

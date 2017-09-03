@@ -1,0 +1,79 @@
+%option noyywrap
+%{
+    #include "grammar.tab.hpp"
+%}
+
+name        [[:alpha:]_][[:alnum:]_]*
+whitespace  [ \r\t\v\f]
+linefeed    \n
+integer     [[:digit:]]]+
+floating    ([0-9]*.[0-9]+|[0-9]+.[0-9]*)
+number      integer|floating
+string      \"[[:print:]]*\"
+
+%%
+
+{number}            { return NUMBER;        }
+{name}              { return NAME;          }
+{string}            { return STRING;        }
+{whitespace}
+{linefeed}          ++yylineno;
+
+"and"               { return AND;           }
+"as"                { return AS;            }
+"="                 { return ASSIGN;        }
+"+="                { return AUG_ADD;       }
+"/="                { return AUG_DIV;       }
+"//="               { return AUG_INT_DIV;   }
+"%="                { return AUG_MOD;       }
+"*="                { return AUG_MUL;       }
+"-="                { return AUG_SUB;       }
+"~"                 { return BIN_COMP;      }
+"break"             { return BREAK;         }
+"class"             { return CLASS;         }
+"}"                 { return CLOSE_BRACE;   }
+"]"                 { return CLOSE_BRACK;   }
+")"                 { return CLOSE_PAREN;   }
+":"                 { return COLON;         }
+","                 { return COMMA;         }
+"continue"          { return CONTINUE;      }
+"/"                 { return DIV;           }
+"."                 { return DOT;           }
+"elif"              { return ELIF;          }
+"else"              { return ELSE;          }
+"=="                { return EQUALITY;      }
+"except"            { return EXCEPT;        }
+"**"                { return EXPONENT;      }
+"false"             { return FALSE;         }
+"for"               { return FOR;           }
+"from"              { return FROM;          }
+"function"          { return FUNCTION;      }
+">="                { return GRT_EQL;       }
+">"                 { return GRT_THAN;      }
+"if"                { return IF;            }
+"import"            { return IMPORT;        }
+"in"                { return IN;            }
+"<>"                { return INEQUALITY;    }
+"//"                { return INT_DIV;       }
+"is"                { return IS;            }
+"lambda"            { return LAMBDA;        }
+">="                { return LES_EQL;       }
+"<"                 { return LESS_THAN;     }
+"%"                 { return MOD;           }
+"*"                 { return MUL;           }
+"none"              { return NONE;          }
+"not"               { return NOT;           }
+"{"                 { return OPEN_BRACE;    }
+"["                 { return OPEN_BRACK;    }
+"("                 { return OPEN_PAREN;    }
+"or"                { return OR;            }
+"+"                 { return PLUS;          }
+"return"            { return RETURN;        }
+";"                 { return SEMICOLON;     }
+"-"                 { return SUB;           }
+"throw"             { return THROW;         }
+"true"              { return TRUE;          }
+"try"               { return TRY;           }
+"while"             { return WHILE;         }
+
+%%
